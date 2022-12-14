@@ -1,0 +1,2 @@
+[workspace]
+members = ["page-frontend", "util-pb", "svc-backend"]
