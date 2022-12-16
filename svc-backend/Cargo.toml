@@ -6,3 +6,19 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+tonic = "0.8.3"
+tokio = { version = "1.23", features = ["full"] }
+sqlx = { version = "0.6.2", features = ["postgres", "runtime-tokio-rustls"] }
+serde = { version = "1.0.130", features = ["derive"] }
+
+chrono = { version = "0.4", features = ["serde"] }
+derive_builder = "0.12"
+
+tracing = "0.1"
+tracing-subscriber = "0.3.16"
+dotenv = "0.15.0"
+thiserror = "1"
+util-pb = { path = "../util-pb" }
+
+[dev-dependencies]
+sqlx-db-tester = "0.3.1"
