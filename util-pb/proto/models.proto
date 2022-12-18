@@ -17,7 +17,7 @@ message Article{
 	ArticleState state = 5;
 	google.protobuf.Timestamp created_at = 6;
 	google.protobuf.Timestamp updated_at = 7;
-	int32 cat_id = 8;
+	int32 category_id = 8;
 	repeated int32 tags_id = 9;
 }
 
@@ -32,11 +32,11 @@ message Tag{
 }
 
 message QueryArticle{
-	repeated int32 id = 1;
+	repeated int32 ids = 1;
 	string title = 2;
 	ArticleState state = 3;
 	google.protobuf.Timestamp created_year = 4;
-	int32 cat_id = 5;
+	int32 category_id = 5;
 	repeated int32 tags_id = 6;
 }
 

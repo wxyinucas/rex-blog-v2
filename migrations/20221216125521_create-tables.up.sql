@@ -18,17 +18,11 @@ CREATE TABLE blog.articles
     content     TEXT               NOT NULL,
     summary     VARCHAR(255)       NOT NULL,
     state       blog.article_state NOT NULL default 'published',
-    created_at  TIMESTAMP          NOT NULL DEFAULT NOW(),
-    updated_at  TIMESTAMP          NOT NULL DEFAULT NOW(),
+    created_at  TIMESTAMPTZ        NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ        NOT NULL DEFAULT NOW(),
     category_id INT references blog.categories (id)
 );
 
-CREATE TABLE blog.article_tag
-(
-    article_id INT references blog.articles (id),
-    tag_id     INT references blog.tags (id),
-    PRIMARY KEY (article_id, tag_id)
-);
 
 
 INSERT INTO blog.categories (name)
@@ -43,6 +37,5 @@ VALUES ('Test_tag1');
 
 INSERT INTO blog.articles (id, title, content, summary, category_id)
 VALUES (1000, 'test_title', 'test_content', 'test_summary', 1);
-
-INSERT INTO blog.article_tag (article_id, tag_id)
-VALUES (1000, 1);
+INSERT INTO blog.articles (id, title, content, summary, category_id)
+VALUES (1001, 'test_title1', 'test_content1', 'test_summary1', 1);

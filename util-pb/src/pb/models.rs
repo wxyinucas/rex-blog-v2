@@ -16,10 +16,11 @@ pub struct Article {
     #[prost(message, optional, tag = "7")]
     pub updated_at: ::core::option::Option<::prost_types::Timestamp>,
     #[prost(int32, tag = "8")]
-    pub cat_id: i32,
+    pub category_id: i32,
     #[prost(int32, repeated, tag = "9")]
     pub tags_id: ::prost::alloc::vec::Vec<i32>,
 }
+#[derive(sqlx::FromRow)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Category {
@@ -28,6 +29,7 @@ pub struct Category {
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
 }
+#[derive(sqlx::FromRow)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Tag {
@@ -42,7 +44,7 @@ pub struct Tag {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryArticle {
     #[prost(int32, repeated, tag = "1")]
-    pub id: ::prost::alloc::vec::Vec<i32>,
+    pub ids: ::prost::alloc::vec::Vec<i32>,
     #[prost(string, tag = "2")]
     pub title: ::prost::alloc::string::String,
     #[prost(enumeration = "ArticleState", tag = "3")]
@@ -50,7 +52,7 @@ pub struct QueryArticle {
     #[prost(message, optional, tag = "4")]
     pub created_year: ::core::option::Option<::prost_types::Timestamp>,
     #[prost(int32, tag = "5")]
-    pub cat_id: i32,
+    pub category_id: i32,
     #[prost(int32, repeated, tag = "6")]
     pub tags_id: ::prost::alloc::vec::Vec<i32>,
 }
