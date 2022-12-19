@@ -60,7 +60,7 @@ pub struct QueryArticle {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryCategory {
     #[prost(int32, repeated, tag = "1")]
-    pub id: ::prost::alloc::vec::Vec<i32>,
+    pub ids: ::prost::alloc::vec::Vec<i32>,
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
 }
@@ -68,7 +68,7 @@ pub struct QueryCategory {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryTag {
     #[prost(int32, repeated, tag = "1")]
-    pub id: ::prost::alloc::vec::Vec<i32>,
+    pub ids: ::prost::alloc::vec::Vec<i32>,
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
 }

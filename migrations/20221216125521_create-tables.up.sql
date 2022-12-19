@@ -2,13 +2,13 @@
 CREATE TABLE blog.categories
 (
     id   SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE blog.tags
 (
     id   SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE blog.articles
@@ -25,15 +25,17 @@ CREATE TABLE blog.articles
 
 
 
-INSERT INTO blog.categories (name)
-VALUES ('undefined-category');
+INSERT INTO blog.categories (id, name)
+VALUES (0, 'undefined-category');
 INSERT INTO blog.categories (name)
 VALUES ('Test_category1');
 
-INSERT INTO blog.tags (name)
-VALUES ('Test_tag0');
+INSERT INTO blog.tags (id, name)
+VALUES (0, 'undefined-tag');
 INSERT INTO blog.tags (name)
 VALUES ('Test_tag1');
+INSERT INTO blog.tags (name)
+VALUES ('Test_tag2');
 
 INSERT INTO blog.articles (id, title, content, summary, category_id)
 VALUES (1000, 'test_title', 'test_content', 'test_summary', 1);

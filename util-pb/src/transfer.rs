@@ -3,7 +3,7 @@ use prost_types::Timestamp;
 use sqlx::postgres::PgRow;
 use sqlx::{Error, FromRow, Row};
 
-use crate::{Article, ArticleState, QueryArticle};
+use crate::{get_summary, Article, ArticleState, QueryArticle, QueryCategory, QueryTag};
 
 /* =================================================================
 
@@ -12,12 +12,10 @@ Query to Sql String
 
 
 ================================================================== */
-#[tonic::async_trait]
 pub trait ToSql {
     fn to_sql(self) -> String;
 }
 
-#[tonic::async_trait]
 impl ToSql for QueryArticle {
     fn to_sql(self) -> String {
         let ids = if self.ids.is_empty() {
@@ -78,6 +76,108 @@ impl ToSql for QueryArticle {
         )
     }
 }
+
+impl ToSql for QueryCategory {
+    fn to_sql(self) -> String {
+        let ids = if self.ids.is_empty() {
+            "True".to_string()
+        } else {
+            format!(
+                "id IN ({})",
+                self.ids
+                    .iter()
+                    .map(|id| id.to_string())
+                    .collect::<Vec<_>>()
+                    .join(",")
+            )
+        };
+
+        let name = if self.name.is_empty() {
+            "True".to_string()
+        } else {
+            format!("name like '%{}%'", self.name)
+        };
+
+        format!("{} AND {}", ids, name)
+    }
+}
+
+impl ToSql for QueryTag {
+    fn to_sql(self) -> String {
+        let ids = if self.ids.is_empty() {
+            "True".to_string()
+        } else {
+            format!(
+                "id IN ({})",
+                self.ids
+                    .iter()
+                    .map(|id| id.to_string())
+                    .collect::<Vec<_>>()
+                    .join(",")
+            )
+        };
+
+        let name = if self.name.is_empty() {
+            "True".to_string()
+        } else {
+            format!("name like '%{}%'", self.name)
+        };
+
+        format!("{} AND {}", ids, name)
+    }
+}
+/* =================================================================
+
+
+Update to Sql String
+
+
+================================================================== */
+impl ToSql for Article {
+    fn to_sql(self) -> String {
+        let update_at = format!("updated_at = '{}',", Local::now());
+
+        let title = if self.title.is_empty() {
+            "".to_string()
+        } else {
+            format!("title = '{}',", self.title)
+        };
+
+        let content = if self.content.is_empty() {
+            "".to_string()
+        } else {
+            format!("content = '{}',", self.content)
+        };
+
+        let summary = if self.summary.is_empty() && self.content.is_empty() {
+            "".to_string()
+        } else if !self.summary.is_empty() {
+            format!("summary = '{}',", self.summary)
+        } else {
+            format!("summary = '{}',", get_summary(&self.content))
+        };
+
+        let state = if self.state == ArticleState::All as i32 {
+            "".to_string()
+        } else {
+            format!("state = {},", self.state)
+        };
+
+        let category_id = if self.category_id == 0 {
+            "".to_string()
+        } else {
+            format!("category_id = {},", self.category_id)
+        };
+
+        format!(
+            "{}{}{}{}{}{}",
+            update_at, title, content, summary, state, category_id
+        )
+        .trim_end_matches(',')
+        .to_string()
+    }
+}
+
 /* =================================================================
 
 
@@ -101,18 +201,6 @@ pub fn to_timestamp(time: chrono::DateTime<Local>) -> Timestamp {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn to_chrono_should_work() {
-        let now = Local::now();
-        let time = to_timestamp(now);
-        let new_time = to_chrono(&time);
-        println!("{:?}", new_time);
-    }
-}
 /* =================================================================
 
 
@@ -169,5 +257,26 @@ impl FromRow<'_, PgRow> for Article {
             category_id: row.try_get("category_id")?,
             tags_id: tag_ids,
         })
+    }
+}
+
+/* =================================================================
+
+
+tests
+
+
+================================================================== */
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn to_chrono_should_work() {
+        let now = Local::now();
+        let time = to_timestamp(now);
+        let new_time = to_chrono(&time);
+        println!("{:?}", new_time);
     }
 }

@@ -6,4 +6,7 @@ pub type Result<T> = std::result::Result<T, BackendError>;
 pub enum BackendError {
     #[error("Sqlx error: {0}")]
     SqlxError(#[from] sqlx::Error),
+
+    #[error("Invalid request: {0}")]
+    InvalidRequest(String),
 }

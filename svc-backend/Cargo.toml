@@ -20,5 +20,6 @@ dotenv = "0.15.0"
 thiserror = "1"
 util-pb = { path = "../util-pb" }
 
+
 [dev-dependencies]
 sqlx-db-tester = "0.3.1"
