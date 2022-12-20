@@ -64,9 +64,9 @@ message DeleteTag{
 
 message QueryRequest{
 	oneof query{
-		QueryArticle article = 1;
-		QueryCategory category = 2;
-		QueryTag tag = 3;
+		QueryArticle query_article = 1;
+		QueryCategory query_category = 2;
+		QueryTag query_tag = 3;
 	}
 }
 
@@ -94,7 +94,6 @@ message UpdateRequest{
 		Category category = 2;
 		Tag tag = 3;
 	}
-	int32 id = 4;
 }
 
 message UpdateResponse{
@@ -103,9 +102,9 @@ message UpdateResponse{
 
 message DeleteRequest{
 	oneof delete{
-		DeleteArticle article = 1;
-		DeleteCategory category = 2;
-		DeleteTag tag = 3;
+		int32 article_id = 1;
+		int32 category_id = 2;
+		int32 tag_id = 3;
 	}
 }
 
@@ -113,7 +112,7 @@ message DeleteResponse{
 	int32 id = 1;
 }
 
-service Blog{
+service BlogService{
 	rpc Query(QueryRequest) returns (QueryResponse);
 	rpc Create(CreateRequest) returns (CreateResponse);
 	rpc Update(UpdateRequest) returns (UpdateResponse);

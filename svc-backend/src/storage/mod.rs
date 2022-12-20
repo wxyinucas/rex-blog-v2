@@ -1,10 +1,12 @@
 #![allow(clippy::all, unused_imports, dead_code)]
+
 use std::ops::Deref;
 
 use sqlx::PgPool;
 
+pub use traits::{BlogDB, ID};
+
 mod implements;
-mod models;
 mod traits;
 
 #[cfg(test)]

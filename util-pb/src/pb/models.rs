@@ -102,11 +102,11 @@ pub mod query_request {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Query {
         #[prost(message, tag = "1")]
-        Article(super::QueryArticle),
+        QueryArticle(super::QueryArticle),
         #[prost(message, tag = "2")]
-        Category(super::QueryCategory),
+        QueryCategory(super::QueryCategory),
         #[prost(message, tag = "3")]
-        Tag(super::QueryTag),
+        QueryTag(super::QueryTag),
     }
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -147,8 +147,6 @@ pub struct CreateResponse {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateRequest {
-    #[prost(int32, tag = "4")]
-    pub id: i32,
     #[prost(oneof = "update_request::Update", tags = "1, 2, 3")]
     pub update: ::core::option::Option<update_request::Update>,
 }
@@ -182,12 +180,12 @@ pub mod delete_request {
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Delete {
-        #[prost(message, tag = "1")]
-        Article(super::DeleteArticle),
-        #[prost(message, tag = "2")]
-        Category(super::DeleteCategory),
-        #[prost(message, tag = "3")]
-        Tag(super::DeleteTag),
+        #[prost(int32, tag = "1")]
+        ArticleId(i32),
+        #[prost(int32, tag = "2")]
+        CategoryId(i32),
+        #[prost(int32, tag = "3")]
+        TagId(i32),
     }
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -217,15 +215,15 @@ impl ArticleState {
     }
 }
 /// Generated client implementations.
-pub mod blog_client {
+pub mod blog_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::http::Uri;
     use tonic::codegen::*;
     #[derive(Debug, Clone)]
-    pub struct BlogClient<T> {
+    pub struct BlogServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl BlogClient<tonic::transport::Channel> {
+    impl BlogServiceClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -236,7 +234,7 @@ pub mod blog_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> BlogClient<T>
+    impl<T> BlogServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -251,7 +249,10 @@ pub mod blog_client {
             let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
-        pub fn with_interceptor<F>(inner: T, interceptor: F) -> BlogClient<InterceptedService<T, F>>
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> BlogServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -264,7 +265,7 @@ pub mod blog_client {
             <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
                 Into<StdError> + Send + Sync,
         {
-            BlogClient::new(InterceptedService::new(inner, interceptor))
+            BlogServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -292,7 +293,7 @@ pub mod blog_client {
                 )
             })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/models.Blog/Query");
+            let path = http::uri::PathAndQuery::from_static("/models.BlogService/Query");
             self.inner.unary(request.into_request(), path, codec).await
         }
         pub async fn create(
@@ -306,7 +307,7 @@ pub mod blog_client {
                 )
             })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/models.Blog/Create");
+            let path = http::uri::PathAndQuery::from_static("/models.BlogService/Create");
             self.inner.unary(request.into_request(), path, codec).await
         }
         pub async fn update(
@@ -320,7 +321,7 @@ pub mod blog_client {
                 )
             })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/models.Blog/Update");
+            let path = http::uri::PathAndQuery::from_static("/models.BlogService/Update");
             self.inner.unary(request.into_request(), path, codec).await
         }
         pub async fn delete(
@@ -334,18 +335,18 @@ pub mod blog_client {
                 )
             })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/models.Blog/Delete");
+            let path = http::uri::PathAndQuery::from_static("/models.BlogService/Delete");
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }
 /// Generated server implementations.
-pub mod blog_server {
+pub mod blog_service_server {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    /// Generated trait containing gRPC methods that should be implemented for use with BlogServer.
+    /// Generated trait containing gRPC methods that should be implemented for use with BlogServiceServer.
     #[async_trait]
-    pub trait Blog: Send + Sync + 'static {
+    pub trait BlogService: Send + Sync + 'static {
         async fn query(
             &self,
             request: tonic::Request<super::QueryRequest>,
@@ -364,13 +365,13 @@ pub mod blog_server {
         ) -> Result<tonic::Response<super::DeleteResponse>, tonic::Status>;
     }
     #[derive(Debug)]
-    pub struct BlogServer<T: Blog> {
+    pub struct BlogServiceServer<T: BlogService> {
         inner: _Inner<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
     }
     struct _Inner<T>(Arc<T>);
-    impl<T: Blog> BlogServer<T> {
+    impl<T: BlogService> BlogServiceServer<T> {
         pub fn new(inner: T) -> Self {
             Self::from_arc(Arc::new(inner))
         }
@@ -401,9 +402,9 @@ pub mod blog_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>> for BlogServer<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for BlogServiceServer<T>
     where
-        T: Blog,
+        T: BlogService,
         B: Body + Send + 'static,
         B::Error: Into<StdError> + Send + 'static,
     {
@@ -416,10 +417,10 @@ pub mod blog_server {
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             let inner = self.inner.clone();
             match req.uri().path() {
-                "/models.Blog/Query" => {
+                "/models.BlogService/Query" => {
                     #[allow(non_camel_case_types)]
-                    struct QuerySvc<T: Blog>(pub Arc<T>);
-                    impl<T: Blog> tonic::server::UnaryService<super::QueryRequest> for QuerySvc<T> {
+                    struct QuerySvc<T: BlogService>(pub Arc<T>);
+                    impl<T: BlogService> tonic::server::UnaryService<super::QueryRequest> for QuerySvc<T> {
                         type Response = super::QueryResponse;
                         type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
@@ -447,10 +448,10 @@ pub mod blog_server {
                     };
                     Box::pin(fut)
                 }
-                "/models.Blog/Create" => {
+                "/models.BlogService/Create" => {
                     #[allow(non_camel_case_types)]
-                    struct CreateSvc<T: Blog>(pub Arc<T>);
-                    impl<T: Blog> tonic::server::UnaryService<super::CreateRequest> for CreateSvc<T> {
+                    struct CreateSvc<T: BlogService>(pub Arc<T>);
+                    impl<T: BlogService> tonic::server::UnaryService<super::CreateRequest> for CreateSvc<T> {
                         type Response = super::CreateResponse;
                         type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
@@ -478,10 +479,10 @@ pub mod blog_server {
                     };
                     Box::pin(fut)
                 }
-                "/models.Blog/Update" => {
+                "/models.BlogService/Update" => {
                     #[allow(non_camel_case_types)]
-                    struct UpdateSvc<T: Blog>(pub Arc<T>);
-                    impl<T: Blog> tonic::server::UnaryService<super::UpdateRequest> for UpdateSvc<T> {
+                    struct UpdateSvc<T: BlogService>(pub Arc<T>);
+                    impl<T: BlogService> tonic::server::UnaryService<super::UpdateRequest> for UpdateSvc<T> {
                         type Response = super::UpdateResponse;
                         type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
@@ -509,10 +510,10 @@ pub mod blog_server {
                     };
                     Box::pin(fut)
                 }
-                "/models.Blog/Delete" => {
+                "/models.BlogService/Delete" => {
                     #[allow(non_camel_case_types)]
-                    struct DeleteSvc<T: Blog>(pub Arc<T>);
-                    impl<T: Blog> tonic::server::UnaryService<super::DeleteRequest> for DeleteSvc<T> {
+                    struct DeleteSvc<T: BlogService>(pub Arc<T>);
+                    impl<T: BlogService> tonic::server::UnaryService<super::DeleteRequest> for DeleteSvc<T> {
                         type Response = super::DeleteResponse;
                         type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
@@ -551,7 +552,7 @@ pub mod blog_server {
             }
         }
     }
-    impl<T: Blog> Clone for BlogServer<T> {
+    impl<T: BlogService> Clone for BlogServiceServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
             Self {
@@ -561,7 +562,7 @@ pub mod blog_server {
             }
         }
     }
-    impl<T: Blog> Clone for _Inner<T> {
+    impl<T: BlogService> Clone for _Inner<T> {
         fn clone(&self) -> Self {
             Self(self.0.clone())
         }
@@ -571,7 +572,7 @@ pub mod blog_server {
             write!(f, "{:?}", self.0)
         }
     }
-    impl<T: Blog> tonic::server::NamedService for BlogServer<T> {
-        const NAME: &'static str = "models.Blog";
+    impl<T: BlogService> tonic::server::NamedService for BlogServiceServer<T> {
+        const NAME: &'static str = "models.BlogService";
     }
 }

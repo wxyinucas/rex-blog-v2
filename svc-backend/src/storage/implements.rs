@@ -11,7 +11,6 @@ use util_pb::{
 };
 
 use crate::error::Result;
-use crate::storage::models::DBArticle;
 use crate::storage::traits::{BlogDB, ID};
 use crate::storage::DBPool;
 use crate::BackendError;
