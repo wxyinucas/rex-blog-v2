@@ -1,0 +1,46 @@
+{% extends "management/base.html" %}
+{% block title %}All Articles{% endblock %}
+{%block toolbar%}{% include "management/toolbar.html" %} {% endblock %}
+{%block content%}
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Summary</th>
+        <th>Category</th>
+        <th>Created_at</th>
+        <th>Updated_at</th>
+        <th> Tags</th>
+        <th>Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for article_with_names in articles_with_name %}
+    {% set article = article_with_names.0.0 %}
+    {% set category = article_with_names.0.1 %}
+    {% set tag = article_with_names.1 %}
+
+
+    <tr>
+        <td><a href="/management/articles/edit/{{ article.id }}">{{ article.title }}</a></td>
+        <td>{{ article.summary }}</td>
+        <td>
+            {{ category }}
+        </td>
+        <td>{{ article.created_at }}</td>
+        <td>{{ article.updated_at }}</td>
+        <td>
+            {{ tag }}
+        </td>
+        <td>
+            <a href="/management/articles/edit/{{ article.id }}" class="btn btn-primary btn-sm">Modify</a>
+            <a href="/management/articles/delete/{{ article.id }}" class="btn btn-danger btn-sm"
+               onclick="return confirm('Do delete {{ article.title }}?');">Delete</a>
+
+        </td>
+    </tr>
+    {%endfor%}
+
+    </tbody>
+</table>
+{% endblock %}

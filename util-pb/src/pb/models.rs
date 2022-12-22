@@ -20,7 +20,7 @@ pub struct Article {
     #[prost(int32, repeated, tag = "9")]
     pub tags_id: ::prost::alloc::vec::Vec<i32>,
 }
-#[derive(sqlx::FromRow)]
+#[derive(sqlx::FromRow, serde::Serialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Category {
@@ -29,7 +29,7 @@ pub struct Category {
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
 }
-#[derive(sqlx::FromRow)]
+#[derive(sqlx::FromRow, serde::Serialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Tag {

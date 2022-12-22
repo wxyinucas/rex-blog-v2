@@ -1,5 +1,7 @@
 use chrono::{DateTime, Datelike, Duration, Local, TimeZone};
 use prost_types::Timestamp;
+use serde::ser::SerializeStruct;
+use serde::Serializer;
 use sqlx::postgres::PgRow;
 use sqlx::{Error, FromRow, Row};
 
@@ -263,6 +265,38 @@ impl FromRow<'_, PgRow> for Article {
 /* =================================================================
 
 
+Serialize
+
+
+================================================================== */
+
+impl serde::Serialize for Article {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("Article", 7)?;
+        state.serialize_field("id", &self.id)?;
+        state.serialize_field("title", &self.title)?;
+        state.serialize_field("content", &self.content)?;
+        state.serialize_field("category_id", &self.category_id)?;
+        state.serialize_field("summary", &self.summary)?;
+        state.serialize_field("state", &self.state)?;
+
+        let create_at = to_chrono(self.created_at.as_ref().unwrap());
+        let create_at = create_at.format("%Y-%m-%d %H:%M").to_string();
+        state.serialize_field("created_at", &create_at)?;
+        let update_at = to_chrono(self.updated_at.as_ref().unwrap());
+        let update_at = update_at.format("%Y-%m-%d %H:%M").to_string();
+        state.serialize_field("updated_at", &update_at)?;
+        state.serialize_field("tags_id", &self.tags_id)?;
+        state.end()
+    }
+}
+
+/* =================================================================
+
+
 tests
 
 
@@ -278,5 +312,43 @@ mod tests {
         let time = to_timestamp(now);
         let new_time = to_chrono(&time);
         println!("{:?}", new_time);
+    }
+
+    #[test]
+    fn article_serialize_should_work() {
+        let article = Article {
+            id: 1,
+            title: "title".into(),
+            content: "content".into(),
+            category_id: 1,
+            summary: "summary".into(),
+            state: 1,
+            created_at: Some(Timestamp {
+                seconds: 1,
+                nanos: 1,
+            }),
+            updated_at: Some(Timestamp {
+                seconds: 1,
+                nanos: 1,
+            }),
+            tags_id: vec![1],
+        };
+
+        let json = serde_json::to_string_pretty(&article).unwrap();
+        let res = r#"{
+  "id": 1,
+  "title": "title",
+  "content": "content",
+  "category_id": 1,
+  "summary": "summary",
+  "state": 1,
+  "created_at": "1970-01-01 08:00",
+  "updated_at": "1970-01-01 08:00",
+  "tags_id": [
+    1
+  ]
+}"#;
+        assert_eq!(json, res);
+        // println!("{}", json);
     }
 }

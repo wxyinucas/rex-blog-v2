@@ -1,0 +1,25 @@
+{% extends "management/base.html" %}
+{% block title %}All tags{% endblock %}
+{%block toolbar%}{% include "management/toolbar.html" %} {% endblock %}
+{%block content%}
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <rh>Name</rh>
+        <th>Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for tag in tags%}
+    <tr>
+        <td><a href="#">{{ tag.name}}</a></td>
+        <td>
+            <a href="/management/tags/edit/{{ tag.id }}" class="btn btn-primary btn-sm">Modify</a>
+            <a href="/management/tags/delete/{{ tag.id }}" class="btn btn-danger btn-sm"
+               onclick="return confirm('Do delete {{ tag.name }}?');">Delete</a>
+        </td>
+    </tr>
+    {%endfor%}
+    </tbody>
+</table>
+{% endblock %}

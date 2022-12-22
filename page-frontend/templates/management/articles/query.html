@@ -1,0 +1,49 @@
+{% extends "management/base.html" %}
+{% block title %} Query Article {% endblock %}
+{%block toolbar%}{% include "management/toolbar.html" %} {% endblock %}
+{%block content%}
+<form method="post" action="/management/articles/query">
+
+    <div class="form-floating">
+        <input name="title" class="form-control" id="title" placeholder="title">
+        <label for="title">Title</label>
+    </div>
+    <div class="mb-3">
+        <label for="category_id" class="form-label">Categories</label>
+        <select id="category_id" name="category_id" class="form-select" required>
+            <option value="">--Choose a category--</option>
+            {% for cat in categories %}
+            <option value="{{cat.id}}">{{cat.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div class="mb-3">
+        <label for="state" class="form-label">state</label>
+        <select id="state" name="state" class="form-select" required>
+            <option value="UNKNOWN">--Choose a state--</option>
+            {% for s in article_states %}
+            <option value={{loop.index - 1}}>{{loop.index - 1}}.{{s}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div class="form-floating">
+        <input name="summary" class="form-control" id="summary" placeholder="summary">
+        <label for="summary">Summary</label>
+    </div>
+    <div class="form-floating">
+        <input name="content" class="form-control" id="content" placeholder="content" >
+        <label for="content">Content</label>
+    </div>
+    <div class="form-floating">
+        <input name="tags" class="form-control" id="tags" placeholder="content" >
+        <label for="tags">tags</label>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

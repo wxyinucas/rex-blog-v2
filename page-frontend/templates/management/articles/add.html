@@ -1,0 +1,40 @@
+{% extends "management/base.html" %}
+{% block title %}Add Article{% endblock %}
+{%block toolbar%}{% include "management/toolbar.html" %} {% endblock %}
+{%block content%}
+<form method="post" action="/management/articles/add">
+
+    <div class="form-floating">
+        <input name="title" class="form-control" id="title" placeholder="title" required>
+        <label for="title">Title</label>
+    </div>
+    <div class="mb-3">
+        <label for="category_id" class="form-label">Categories</label>
+        <select id="category_id" name="category_id" class="form-select" required>
+            <option value="">--Choose a category--</option>
+            {% for cat in categories %}
+            <option value="1">{{cat.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div class="form-floating">
+        <input name="summary" class="form-control" id="summary" placeholder="summary">
+        <label for="summary">Summary</label>
+    </div>
+    <div class="mb-3">
+        <label for="tags" class="form-label">Tags</label>
+        <input type="text" class="form-control" id="tags" name="tags"
+               placeholder="Tags" value="undefined">
+    </div>
+    <div class="mb-3">
+        <textarea name="content" class="form-control" id="content" placeholder="content" rows="25">
+        </textarea>
+        <label for="content">Content</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+{% endblock %}

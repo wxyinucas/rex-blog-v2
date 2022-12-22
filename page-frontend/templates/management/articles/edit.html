@@ -1,0 +1,51 @@
+{% extends "management/base.html" %}
+{% block title %}Edit Article{% endblock %}
+{%block toolbar%}{% include "management/toolbar.html" %} {% endblock %}
+{%block content%}
+<form method="post" action="/management/articles/edit/{{article.id}}">
+    <input type="hidden" value="{{article.id}}" name="id">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" name="title" id="title" class="form-control" placeholder="Title" value="{{ article.title }}"
+               required>
+    </div>
+    <div class="mb-3">
+        <label for="category_id" class="form-label"> Category </label>
+        <select id="category_id" name="category_id" class="form-select" required>
+            <option value="">--Category--</option>
+            {% for cat in categories %}
+            <option value="{{cat.id}}" {%if cat.id==article.category_id%} selected {%endif%}>
+                {{cat.name}}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="state" class="form-label"> State </label>
+        <select id="state" name="state" class="form-select" required>
+            <option value="">--State--</option>
+            {% for state in article_states %}
+            <option value="{{loop.index}}" {%if (loop.index)==article.state%} selected {%endif%}>{{state}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div class="mb-3">
+        <label for="summary" class="form-label">Summary</label>
+        <textarea class="form-control" id="summary" name="summary" rows="3"
+                  placeholder="Summary">{{article.summary}}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="tags" class="form-label">Tags</label>
+        <input type="text" class="form-control" id="tags" name="tags"
+               placeholder="Tags" value="{{ tags_name }}">
+    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea class="form-control" id="content" name="content" rows="40" placeholder="Content" required>{{article.content}}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

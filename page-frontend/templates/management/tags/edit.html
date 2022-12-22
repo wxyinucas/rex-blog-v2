@@ -1,0 +1,15 @@
+{% extends "management/base.html" %}
+{% block title %}Edit tag{% endblock %}
+{%block toolbar%}{% include "management/toolbar.html" %} {% endblock %}
+{%block content%}
+<form method="post" action="/management/tags/edit/{{tag.id}}">
+    <input type="hidden" value="{{tag.id}}" name="id">
+    <div class="mb-3">
+        <label for="name" class="form-label">NAME</label>
+        <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="{{ tag.name}}"
+               required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

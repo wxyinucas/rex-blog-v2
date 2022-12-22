@@ -1,14 +1,9 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+pub mod common_handlers;
+pub mod errors;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+mod demonstration;
+mod management;
+pub mod shared_state;
+mod transfer;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use management::routers::management_router;

@@ -1,0 +1,15 @@
+{% extends "management/base.html" %}
+{% block title %}Add Article{% endblock %}
+{%block toolbar%}{% include "management/toolbar.html" %} {% endblock %}
+{%block content%}
+<form method="post" action="/management/tags/add">
+
+    <div class="form-floating">
+        <input name="name" class="form-control" id="name" placeholder="New tag name">
+        <label for="name">Name</label>
+    </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+{% endblock %}
