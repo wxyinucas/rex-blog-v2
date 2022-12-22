@@ -16,6 +16,9 @@ pub enum FrontendError {
 
     #[error("Status code: {0}")]
     StatusCode(String),
+
+    #[error("Internal Error: {0}")]
+    InternalError(String),
 }
 
 impl From<Status> for FrontendError {

@@ -162,7 +162,13 @@ impl ToSql for Article {
         let state = if self.state == ArticleState::All as i32 {
             "".to_string()
         } else {
-            format!("state = {},", self.state)
+            format!(
+                "state = '{}',",
+                ArticleState::try_from(self.state)
+                    .unwrap()
+                    .as_str_name()
+                    .to_lowercase()
+            )
         };
 
         let category_id = if self.category_id == 0 {
@@ -224,6 +230,18 @@ impl From<AS> for ArticleState {
             AS::All => ArticleState::All,
             AS::Published => ArticleState::Published,
             AS::Hidden => ArticleState::Hidden,
+        }
+    }
+}
+
+impl TryFrom<i32> for ArticleState {
+    type Error = String;
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(ArticleState::All),
+            1 => Ok(ArticleState::Published),
+            2 => Ok(ArticleState::Hidden),
+            _ => Err("No such state".to_string()),
         }
     }
 }

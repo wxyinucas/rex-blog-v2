@@ -13,7 +13,7 @@
         <select id="category_id" name="category_id" class="form-select" required>
             <option value="">--Choose a category--</option>
             {% for cat in categories %}
-            <option value="1">{{cat.name}}</option>
+            <option value="0">{{cat.name}}</option>
             {% endfor %}
         </select>
     </div>
@@ -23,15 +23,27 @@
         <input name="summary" class="form-control" id="summary" placeholder="summary">
         <label for="summary">Summary</label>
     </div>
+
+
+    <div class="mb-3">
+        <label for="state" class="form-label"> State </label>
+        <select id="state" name="state" class="form-select" required>
+            <option value="">--State--</option>
+            {% for state in article_states %}
+            <option value="{{loop.index}}">{{state}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
     <div class="mb-3">
         <label for="tags" class="form-label">Tags</label>
         <input type="text" class="form-control" id="tags" name="tags"
-               placeholder="Tags" value="undefined">
+               placeholder="Tags" value="undefined-tag">
     </div>
     <div class="mb-3">
-        <textarea name="content" class="form-control" id="content" placeholder="content" rows="25">
-        </textarea>
         <label for="content">Content</label>
+        <textarea name="content" class="form-control" id="content" placeholder="The content here" rows="25" required></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>

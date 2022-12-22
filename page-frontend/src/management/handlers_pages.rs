@@ -90,6 +90,9 @@ pub async fn page_article_add(Extension(state): Extension<SharedState>) -> Resul
     let categories = get_categories(&state).await;
     ctx.insert("categories", &categories);
 
+    let article_states = articles_states();
+    ctx.insert("article_states", &article_states);
+
     let page = state
         .tera()
         .render("management/articles/add.html", &ctx)

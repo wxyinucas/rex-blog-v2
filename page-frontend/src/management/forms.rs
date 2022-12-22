@@ -3,7 +3,7 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub(crate) struct FormArticle {
+pub struct FormArticle {
     pub title: String,
     pub content: String,
     pub category_id: i32,
@@ -13,11 +13,11 @@ pub(crate) struct FormArticle {
 }
 
 #[derive(Debug, Deserialize)]
-pub(crate) struct FormCategory {
+pub struct FormCategory {
     pub name: String,
 }
 
 #[derive(Debug, Deserialize)]
-pub(crate) struct FormTag {
+pub struct FormTag {
     pub name: String,
 }

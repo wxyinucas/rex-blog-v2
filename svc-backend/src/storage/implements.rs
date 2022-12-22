@@ -3,6 +3,7 @@ use std::collections::HashSet;
 use std::ops::Deref;
 
 use sqlx::Row;
+use tracing::trace;
 
 use util_pb::transfer::AS;
 use util_pb::{
@@ -38,6 +39,7 @@ impl BlogDB for DBPool {
         let res = sqlx::query_as::<_, Article>(&sql)
             .fetch_all(self.deref())
             .await?;
+        tracing::error!("res: {:?}", res);
         Ok(res)
     }
 
@@ -64,8 +66,8 @@ impl BlogDB for DBPool {
 
         // step2: blog.article_tag
         let sql = "INSERT INTO blog.article_tag (article_id, tag_id) VALUES ($1, $2);";
-        let mut tags_id = article.tags_id;
-        tags_id.push(0);
+        let tags_id = article.tags_id;
+        // tags_id.push(0);
         for tag_id in tags_id {
             sqlx::query(sql)
                 .bind(id)
