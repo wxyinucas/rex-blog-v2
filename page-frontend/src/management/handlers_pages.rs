@@ -1,5 +1,3 @@
-#![allow(clippy::all, unused_imports, dead_code)]
-
 use std::collections::HashMap;
 
 use axum::extract::Path;
@@ -8,9 +6,8 @@ use axum::Extension;
 use tera::Context;
 
 use util_pb::query_request::Query;
-use util_pb::{ArticleState, Category, Tag};
 
-use crate::common_handlers::{Redirect, TeraHtml};
+use crate::common_handlers::*;
 use crate::errors::{FrontendError, Result};
 use crate::shared_state::SharedState;
 
@@ -71,7 +68,7 @@ pub async fn page_article_list(Extension(state): Extension<SharedState>) -> Resu
 
     let page = state
         .tera()
-        .render("management/articles/index.html", &ctx)
+        .render("management/articles/base.html", &ctx)
         .map_err(|err| {
             tracing::error!("render error: \n{:?}", err);
             tracing::error!("ctx: {:?}", ctx);
@@ -160,7 +157,7 @@ pub async fn page_category_list(Extension(state): Extension<SharedState>) -> Res
 
     let page = state
         .tera()
-        .render("management/categories/index.html", &ctx)
+        .render("management/categories/base.html", &ctx)
         .map_err(FrontendError::from)
         .unwrap();
     Ok(Html(page))
@@ -225,7 +222,7 @@ pub async fn page_tag_list(Extension(state): Extension<SharedState>) -> Result<T
 
     let page = state
         .tera()
-        .render("management/tags/index.html", &ctx)
+        .render("management/tags/base.html", &ctx)
         .map_err(FrontendError::from)
         .unwrap();
     Ok(Html(page))
@@ -309,29 +306,4 @@ async fn get_categories_tags(state: &SharedState) -> (HashMap<i32, String>, Hash
     }
 
     (c_map, t_map)
-}
-
-async fn get_categories(state: &SharedState) -> Vec<Category> {
-    let query_category = util_pb::QueryCategory::default();
-    let query = util_pb::QueryRequest {
-        query: Some(Query::QueryCategory(query_category)),
-    };
-    let res = state.client().query(query).await.unwrap().into_inner();
-    res.categories
-}
-
-async fn get_tags(state: &SharedState) -> Vec<Tag> {
-    let query_tag = util_pb::QueryTag::default();
-    let query = util_pb::QueryRequest {
-        query: Some(Query::QueryTag(query_tag)),
-    };
-    let res = state.client().query(query).await.unwrap().into_inner();
-    res.tags
-}
-
-fn articles_states() -> Vec<&'static str> {
-    vec![
-        ArticleState::Published.as_str_name(),
-        ArticleState::Hidden.as_str_name(),
-    ]
 }

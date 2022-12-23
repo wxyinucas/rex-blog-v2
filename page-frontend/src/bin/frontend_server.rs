@@ -1,7 +1,7 @@
 use axum::http::StatusCode;
 use axum::routing::get_service;
 use axum::{Extension, Router};
-use page_frontend::management_router;
+use page_frontend::{demonstration_router, management_router};
 use tera::Tera;
 use tower_http::services::ServeDir;
 
@@ -32,6 +32,7 @@ async fn main() {
     );
 
     let app = Router::new()
+        .nest("/", demonstration_router())
         .nest("/management", management_router())
         .layer(Extension(shared_state))
         .nest_service("/assets", static_svc);

@@ -25,3 +25,5 @@ tera = "1"
 
 util-pb = { path = "../util-pb" }
 svc-backend = { path = "../svc-backend" }
+
+pulldown-cmark = "0.9.2"

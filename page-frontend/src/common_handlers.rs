@@ -1,5 +1,3 @@
-#![allow(clippy::all, unused_imports, dead_code)]
-
 use axum::headers::HeaderMap;
 use axum::http::StatusCode;
 use axum::response::Html;
@@ -10,7 +8,7 @@ use tonic::Request;
 use util_pb::blog_service_client::BlogServiceClient;
 use util_pb::create_request::Create;
 use util_pb::query_request::Query;
-use util_pb::{CreateRequest, QueryTag, Tag};
+use util_pb::{ArticleState, Category, CreateRequest, QueryTag, Tag};
 
 use crate::errors::{FrontendError, Result};
 use crate::shared_state::SharedState;
@@ -76,4 +74,36 @@ pub async fn get_ids_from_tag_str(tags_str: &str, state: &SharedState) -> Result
     )
     .await?;
     Ok(tag_ids)
+}
+
+/* =================================================================
+
+
+get all
+
+
+================================================================== */
+pub async fn get_categories(state: &SharedState) -> Vec<Category> {
+    let query_category = util_pb::QueryCategory::default();
+    let query = util_pb::QueryRequest {
+        query: Some(Query::QueryCategory(query_category)),
+    };
+    let res = state.client().query(query).await.unwrap().into_inner();
+    res.categories
+}
+
+pub async fn get_tags(state: &SharedState) -> Vec<Tag> {
+    let query_tag = util_pb::QueryTag::default();
+    let query = util_pb::QueryRequest {
+        query: Some(Query::QueryTag(query_tag)),
+    };
+    let res = state.client().query(query).await.unwrap().into_inner();
+    res.tags
+}
+
+pub fn articles_states() -> Vec<&'static str> {
+    vec![
+        ArticleState::Published.as_str_name(),
+        ArticleState::Hidden.as_str_name(),
+    ]
 }

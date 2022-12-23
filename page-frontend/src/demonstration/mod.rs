@@ -1,1 +1,2 @@
-#![allow(clippy::all, unused_imports, dead_code)]
+mod handlers_pages;
+pub mod routers;

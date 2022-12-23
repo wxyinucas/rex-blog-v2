@@ -1,5 +1,3 @@
-#![allow(clippy::all, unused_imports, dead_code)]
-
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
